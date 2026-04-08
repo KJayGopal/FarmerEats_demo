@@ -103,4 +103,29 @@ class AuthService {
       return {"success": false, "message": e.toString()};
     }
   }
+
+  Future<Map<String, dynamic>> resetPassword({
+    required String token,
+    required String password,
+    required String confirmPassword,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/user/reset-password"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "token": token,
+          "password": password,
+          "cpassword": confirmPassword,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+      final success = data["success"].toString() == "true";
+
+      return {"success": success, "message": data["message"]};
+    } catch (e) {
+      return {"success": false, "message": e.toString()};
+    }
+  }
 }

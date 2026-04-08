@@ -11,6 +11,7 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
+  String token = "";
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -84,18 +85,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                     return;
                   }
 
-                  final res = await authService.forgotPassword(
-                    phoneNumber: password,
+                  final res = await authService.resetPassword(
+                    token: token,
+                    password: _passwordController.text.trim(),
+                    confirmPassword: _confirmPasswordController.text.trim(),
                   );
 
                   if (res["message"] ==
                       "Account with this mobile number does not exist.") {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "Account with this mobile number does not exist.",
-                        ),
-                      ),
+                      const SnackBar(content: Text("Something went wrong.")),
                     );
                   } else {
                     return;
